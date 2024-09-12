@@ -7,49 +7,78 @@ class Node {
     Node next;
     Node prev;
 
-    Node(int x) {
-        data = x;
+    Node(int val) {
+        data = val;
         next = null;
         prev = null;
     }
+}
 
-    public static void printList(Node node) {
-        while (node != null) {
-            System.out.print(node.data + " ");
-            node = node.next;
+public class Main {
+    // Function to insert a node at the end of the Doubly Linked List
+    public static void push(Node tail, int new_data) {
+        Node newNode = new Node(new_data);
+        newNode.next = null;
+        newNode.prev = tail;
+
+        if (tail != null) {
+            tail.next = newNode;
+        }
+    }
+
+    // Function to print nodes in a given doubly linked list
+    public static void printList(Node head) {
+        if (head == null) {
+            return;
+        }
+
+        while (head != null) {
+            System.out.print(head.data + " ");
+            head = head.next;
         }
         System.out.println();
     }
-}
 
-class GFG {
+    // Main driver function
     public static void main(String[] args) throws IOException {
-        Scanner sc = new Scanner(System.in);
-        int t = sc.nextInt();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int t = Integer.parseInt(br.readLine().trim());
+
         while (t-- > 0) {
-            int n = sc.nextInt();
-            Node head = null;
+            String[] arr = br.readLine().trim().split(" ");
+
+            Node head = new Node(Integer.parseInt(arr[0]));
             Node tail = head;
 
-            for (int i = 0; i < n; i++) {
-                int temp = sc.nextInt();
-                if (head == null) {
-                    head = new Node(temp);
-                    tail = head;
-                } else {
-                    Node newNode = new Node(temp);
-                    tail.next = newNode;
-                    newNode.prev = tail;
-                    tail = newNode;
-                }
+            for (int i = 1; i < arr.length; i++) {
+                push(tail, Integer.parseInt(arr[i]));
+                tail = tail.next;
             }
-            int x = sc.nextInt();
-
+            int x = Integer.parseInt(br.readLine().trim());
             Solution obj = new Solution();
-            Node res = obj.deleteNode(head, x);
-
-            Node.printList(res);
+            head = obj.deleteNode(head, x);
+            printList(head);
         }
+    }
+
+    // Verifying the doubly linked list
+    public static boolean verify(Node head) {
+        int forwardLength = 0;
+        int backwardLength = 0;
+
+        Node temp = head;
+
+        while (temp.next != null) {
+            temp = temp.next;
+            forwardLength++;
+        }
+
+        while (temp.prev != null) {
+            temp = temp.prev;
+            backwardLength++;
+        }
+
+        return forwardLength == backwardLength;
     }
 }
 
@@ -59,13 +88,13 @@ class GFG {
 /*
 
 Definition for doubly Link List Node
-class Node
-{
+class Node {
     int data;
     Node next;
     Node prev;
-    Node(int x){
-        data = x;
+
+    Node(int val) {
+        data = val;
         next = null;
         prev = null;
     }
@@ -73,17 +102,27 @@ class Node
 */
 class Solution {
     public Node deleteNode(Node head, int x) {
-         if(x==1){
-          return head.next;
+        // code here
+        if(x==1){
+            head=head.next;
+            head.prev=null;
+            return head;
         }
-        Node temp = head;
-        for(int i = 1;i<x-1;i++){
-            temp = temp.next;
+        x=x-1;
+        Node cur=head;
+        
+        while(x>0){
+            cur=cur.next;
+            x--;
         }
-         temp.next = temp.next.next;
-         if(temp.next!=null){
-             temp.next.prev = temp;
-         }
+        
+        cur.prev.next=cur.next;
+        if(cur.next!=null){
+            cur.next.prev=cur.prev;
+        }
+        
+        
         return head;
+        
     }
-    }
+}
