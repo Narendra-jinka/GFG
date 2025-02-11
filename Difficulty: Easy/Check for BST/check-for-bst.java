@@ -98,7 +98,9 @@ class GfG {
             else
                 System.out.println("false");
             t--;
-        }
+        
+System.out.println("~");
+}
     }
 }
 
@@ -109,38 +111,19 @@ class GfG {
 
 class Solution {
     // Function to check whether a Binary Tree is BST or not.
-    boolean isBST(Node root) {
-        // code here.
-        Node current = root;
-        Node prev = null;
-        
-        while (current != null) {
-            if (current.left == null) {
-                if (prev != null && current.data <= prev.data) {
-                    return false;
-                }
-                prev = current;
-                current = current.right;
-            } else {
-                Node predecessor = current.left;
-                while (predecessor.right != null && predecessor.right != current) {
-                    predecessor = predecessor.right;
-                }
-                
-                if (predecessor.right == null) {
-                    predecessor.right = current;
-                    current = current.left;
-                } else {
-                    predecessor.right = null;
-                    if (prev != null && current.data <= prev.data) {
-                        return false;
-                    }
-                    prev = current;
-                    current = current.right;
-                }
-            }
+     boolean isBST(Node root) {
+    return helper(root,Integer.MAX_VALUE,Integer.MIN_VALUE);
+    }
+    Boolean helper(Node root,int max,int min){
+        if(root==null){
+            return true;
         }
-        
-        return true;
+         
+         if(root.data<min||root.data>max){
+             return false;
+         }
+         
+        return helper(root.left,root.data,min)&&helper(root.right,max,root.data); 
+
     }
 }
